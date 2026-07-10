@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.7.11925.98 stable
+VisualStudioVersion = 18.7.11925.98
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderModule", "OrderModule\OrderModule.csproj", "{63F42F38-7AFE-46F2-962A-CE88A551D8A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{6ACCD1EC-C3DA-4E0C-9046-2FBD589E86CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryModule", "InventoryModule\InventoryModule.csproj", "{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{63F42F38-7AFE-46F2-962A-CE88A551D8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63F42F38-7AFE-46F2-962A-CE88A551D8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63F42F38-7AFE-46F2-962A-CE88A551D8A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ACCD1EC-C3DA-4E0C-9046-2FBD589E86CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ACCD1EC-C3DA-4E0C-9046-2FBD589E86CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ACCD1EC-C3DA-4E0C-9046-2FBD589E86CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ACCD1EC-C3DA-4E0C-9046-2FBD589E86CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

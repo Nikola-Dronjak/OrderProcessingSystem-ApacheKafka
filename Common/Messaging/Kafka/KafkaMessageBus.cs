@@ -1,7 +1,8 @@
 ﻿using Confluent.Kafka;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace OrderModule.Messaging
+namespace Common.Messaging.Kafka
 {
     public class KafkaMessageBus : IMessageBus
     {

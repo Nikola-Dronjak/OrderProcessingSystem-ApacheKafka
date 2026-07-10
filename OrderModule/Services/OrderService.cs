@@ -1,5 +1,6 @@
-﻿using OrderModule.Events;
-using OrderModule.Messaging;
+﻿using Common.Events;
+using Common.Messaging;
+using Common.Messaging.Kafka;
 using OrderModule.Models;
 
 namespace OrderModule.Services
@@ -25,13 +26,16 @@ namespace OrderModule.Services
                 ProductId = createOrderRequest.ProductId,
                 Quantity = createOrderRequest.Quantity,
                 Price = createOrderRequest.Price,
-                CreatedDate = DateTime.UtcNow,
+                Timestamp = DateTime.UtcNow,
                 CorrelationId = correlationId
             };
 
             logger.LogInformation("Publishing OrderCreatedEvent for OrderId: {OrderId}, CorrelationId: {CorrelationId}", orderId, correlationId);
 
-            await messageBus.PublishAsync("order-created", orderCreatedEvent, cancellationToken);
+            await messageBus.PublishAsync(
+                topic: KafkaConstants.OrderCreatedTopic,
+                message: orderCreatedEvent,
+                cancellationToken: cancellationToken);
 
             return orderId;
         }

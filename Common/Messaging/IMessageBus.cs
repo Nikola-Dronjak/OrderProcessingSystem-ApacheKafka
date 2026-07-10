@@ -1,4 +1,4 @@
-﻿namespace OrderModule.Messaging
+﻿namespace Common.Messaging
 {
     public interface IMessageBus
     {
