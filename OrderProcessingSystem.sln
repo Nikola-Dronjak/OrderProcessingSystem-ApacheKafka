@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryModule", "InventoryModule\InventoryModule.csproj", "{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentModule", "PaymentModule\PaymentModule.csproj", "{B9FC083B-4507-453D-9E75-71CFD00A89C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B583DD6B-B186-48E2-8CFE-DBC06EAF28B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9FC083B-4507-453D-9E75-71CFD00A89C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9FC083B-4507-453D-9E75-71CFD00A89C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9FC083B-4507-453D-9E75-71CFD00A89C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9FC083B-4507-453D-9E75-71CFD00A89C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

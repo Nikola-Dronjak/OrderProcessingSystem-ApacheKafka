@@ -6,22 +6,19 @@ using System.Text.Json;
 
 namespace InventoryModule.Consumers
 {
-    public class OrderCreatedConsumer : BackgroundService
+    public class OrderCreatedConsumer : KafkaConsumerBackgroundService
     {
         private const int SimulatedInventoryProcessingDelayMilliseconds = 500;
-
-        private readonly IConsumer<string, string> consumer;
         private readonly IMessageBus messageBus;
         private readonly ILogger<OrderCreatedConsumer> logger;
 
-        public OrderCreatedConsumer(IConsumer<string, string> consumer, IMessageBus messageBus, ILogger<OrderCreatedConsumer> logger)
+        public OrderCreatedConsumer(IConsumer<string, string> consumer, IMessageBus messageBus, ILogger<OrderCreatedConsumer> logger) : base(consumer)
         {
-            this.consumer = consumer;
             this.messageBus = messageBus;
             this.logger = logger;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ConsumeMessagesAsync(CancellationToken stoppingToken)
         {
             this.consumer.Subscribe(KafkaConstants.OrderCreatedTopic);
 

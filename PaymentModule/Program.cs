@@ -2,15 +2,11 @@ using Common.Messaging.Extensions;
 using Common.Messaging.Kafka;
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
-using OrderModule.Consumers;
-using OrderModule.Services;
+using PaymentModule.Consumers;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
-// Add services to the container.
 builder.Services.AddKafkaMessaging(builder.Configuration);
-
-builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddSingleton<IConsumer<string, string>>(sp =>
 {
@@ -18,7 +14,7 @@ builder.Services.AddSingleton<IConsumer<string, string>>(sp =>
     ConsumerConfig config = new ConsumerConfig
     {
         BootstrapServers = settings.BootstrapServers,
-        GroupId = "order-group",
+        GroupId = "payment-group",
         AutoOffsetReset = AutoOffsetReset.Earliest,
         EnableAutoCommit = true
     };
@@ -26,12 +22,7 @@ builder.Services.AddSingleton<IConsumer<string, string>>(sp =>
     return new ConsumerBuilder<string, string>(config).Build();
 });
 
-builder.Services.AddHostedService<InventoryReservedConsumer>();
+builder.Services.AddHostedService<ProcessPaymentConsumer>();
 
-builder.Services.AddControllers();
-
-var app = builder.Build();
-
-app.MapControllers();
-
-app.Run();
+var host = builder.Build();
+host.Run();

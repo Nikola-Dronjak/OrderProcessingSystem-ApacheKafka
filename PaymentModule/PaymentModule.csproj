@@ -4,7 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-InventoryModule-e0c5e930-3e3c-4ba2-a6b5-e486b3b78208</UserSecretsId>
+    <UserSecretsId>dotnet-PaymentModule-1e2df0bd-96e9-4722-b721-323a78d9351d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
