@@ -7,6 +7,7 @@
         public const string InventoryReservedTopic = "inventory-reserved";
         public const string ProcessPaymentTopic = "process-payment";
         public const string PaymentSucceededTopic = "payment-succeeded";
+        public const string OrderCompletedTopic = "order-completed";
         #endregion
     }
 }

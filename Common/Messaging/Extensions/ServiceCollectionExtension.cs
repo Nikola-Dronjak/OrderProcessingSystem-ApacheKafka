@@ -24,6 +24,7 @@ namespace Common.Messaging.Extensions
                 return new ProducerBuilder<string, string>(producerConfig).Build();
             });
             services.AddSingleton<IMessageBus, KafkaMessageBus>();
+            services.AddSingleton<IKafkaConsumerFactory, KafkaConsumerFactory>();
             return services;
         }
     }

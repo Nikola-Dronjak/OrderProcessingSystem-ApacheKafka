@@ -1,11 +1,11 @@
 using Common.Messaging.Extensions;
-using InventoryModule.Consumers;
+using NotificationModule.Consumers;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddKafkaMessaging(builder.Configuration);
 
-builder.Services.AddHostedService<OrderCreatedConsumer>();
+builder.Services.AddHostedService<OrderCompletedConsumer>();
 
 var host = builder.Build();
 host.Run();

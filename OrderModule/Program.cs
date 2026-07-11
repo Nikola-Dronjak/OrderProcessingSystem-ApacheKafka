@@ -1,7 +1,4 @@
 using Common.Messaging.Extensions;
-using Common.Messaging.Kafka;
-using Confluent.Kafka;
-using Microsoft.Extensions.Options;
 using OrderModule.Consumers;
 using OrderModule.Services;
 
@@ -12,21 +9,8 @@ builder.Services.AddKafkaMessaging(builder.Configuration);
 
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-builder.Services.AddSingleton<IConsumer<string, string>>(sp =>
-{
-    KafkaSettings settings = sp.GetRequiredService<IOptions<KafkaSettings>>().Value;
-    ConsumerConfig config = new ConsumerConfig
-    {
-        BootstrapServers = settings.BootstrapServers,
-        GroupId = "order-group",
-        AutoOffsetReset = AutoOffsetReset.Earliest,
-        EnableAutoCommit = true
-    };
-
-    return new ConsumerBuilder<string, string>(config).Build();
-});
-
 builder.Services.AddHostedService<InventoryReservedConsumer>();
+builder.Services.AddHostedService<PaymentSuceededConsumer>();
 
 builder.Services.AddControllers();
 

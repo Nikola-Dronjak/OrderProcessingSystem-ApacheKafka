@@ -8,11 +8,13 @@ namespace InventoryModule.Consumers
 {
     public class OrderCreatedConsumer : KafkaConsumerBackgroundService
     {
+        private const string GroupId = "inventory-group";
         private const int SimulatedInventoryProcessingDelayMilliseconds = 500;
+
         private readonly IMessageBus messageBus;
         private readonly ILogger<OrderCreatedConsumer> logger;
 
-        public OrderCreatedConsumer(IConsumer<string, string> consumer, IMessageBus messageBus, ILogger<OrderCreatedConsumer> logger) : base(consumer)
+        public OrderCreatedConsumer(IKafkaConsumerFactory consumerFactory, IMessageBus messageBus, ILogger<OrderCreatedConsumer> logger) : base(consumerFactory, GroupId)
         {
             this.messageBus = messageBus;
             this.logger = logger;
@@ -24,53 +26,45 @@ namespace InventoryModule.Consumers
 
             this.logger.LogInformation("Inventory consumer started.");
 
-            try
+            while (!stoppingToken.IsCancellationRequested)
             {
-                while (!stoppingToken.IsCancellationRequested)
+                try
                 {
-                    try
+                    ConsumeResult<string, string> result = this.consumer.Consume(stoppingToken);
+                    OrderCreatedEvent? orderCreatedEvent = JsonSerializer.Deserialize<OrderCreatedEvent>(result.Message.Value);
+                    if (orderCreatedEvent == null)
+                        continue;
+
+                    this.logger.LogInformation("MESSAGE RECEIVED: {Message}", result.Message.Value);
+
+                    // Simulate inventory processing logic
+                    await Task.Delay(SimulatedInventoryProcessingDelayMilliseconds, stoppingToken);
+
+                    InventoryReservedEvent inventoryReservedEvent = new InventoryReservedEvent
                     {
-                        ConsumeResult<string, string> result = this.consumer.Consume(stoppingToken);
-                        OrderCreatedEvent? orderCreatedEvent = JsonSerializer.Deserialize<OrderCreatedEvent>(result.Message.Value);
+                        OrderId = orderCreatedEvent.OrderId,
+                        ProductId = orderCreatedEvent.ProductId,
+                        Quantity = orderCreatedEvent.Quantity,
+                        Price = orderCreatedEvent.Price,
+                        CorrelationId = orderCreatedEvent.CorrelationId,
+                        Timestamp = DateTime.UtcNow
+                    };
 
-                        if (orderCreatedEvent == null)
-                            continue;
+                    await this.messageBus.PublishAsync(
+                        topic: KafkaConstants.InventoryReservedTopic,
+                        message: inventoryReservedEvent,
+                        cancellationToken: stoppingToken);
 
-                        this.logger.LogInformation("MESSAGE RECEIVED: {Message}", result.Message.Value);
-
-                        // Simulate inventory processing logic
-                        await Task.Delay(SimulatedInventoryProcessingDelayMilliseconds, stoppingToken);
-
-                        InventoryReservedEvent inventoryReservedEvent = new InventoryReservedEvent
-                        {
-                            OrderId = orderCreatedEvent.OrderId,
-                            ProductId = orderCreatedEvent.ProductId,
-                            Quantity = orderCreatedEvent.Quantity,
-                            Price = orderCreatedEvent.Price,
-                            CorrelationId = orderCreatedEvent.CorrelationId,
-                            Timestamp = DateTime.UtcNow
-                        };
-
-                        await this.messageBus.PublishAsync(
-                            topic: KafkaConstants.InventoryReservedTopic,
-                            message: inventoryReservedEvent,
-                            cancellationToken: stoppingToken);
-
-                        this.logger.LogInformation("Inventory reserved for order {OrderId}", orderCreatedEvent.OrderId);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        this.logger.LogError(ex, "Error processing message");
-                    }
+                    this.logger.LogInformation("Inventory reserved for order {OrderId}", orderCreatedEvent.OrderId);
                 }
-            }
-            finally
-            {
-                this.consumer.Close();
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogError(ex, "Error processing message");
+                }
             }
         }
     }
