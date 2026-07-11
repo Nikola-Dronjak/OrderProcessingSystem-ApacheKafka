@@ -19,7 +19,7 @@ namespace NotificationModule.Consumers
 
         protected override async Task ConsumeMessagesAsync(CancellationToken stoppingToken)
         {
-            this.consumer.Subscribe(KafkaConstants.PaymentSucceededTopic);
+            this.consumer.Subscribe(KafkaConstants.OrderCompletedTopic);
 
             this.logger.LogInformation("OrderCompleted consumer started.");
 
