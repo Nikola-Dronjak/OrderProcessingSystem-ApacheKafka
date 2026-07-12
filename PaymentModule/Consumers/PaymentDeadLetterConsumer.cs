@@ -1,4 +1,6 @@
 ﻿using Common.Commands;
+using Common.Events;
+using Common.Messaging;
 using Common.Messaging.Kafka;
 using Confluent.Kafka;
 using System.Text.Json;
@@ -9,10 +11,12 @@ namespace PaymentModule.Consumers
     {
         private const string GroupId = "payment-dead-letter-group";
 
+        private readonly IMessageBus messageBus;
         private readonly ILogger<PaymentDeadLetterConsumer> logger;
 
-        public PaymentDeadLetterConsumer(IKafkaConsumerFactory consumerFactory, ILogger<PaymentDeadLetterConsumer> logger) : base(consumerFactory, GroupId)
+        public PaymentDeadLetterConsumer(IKafkaConsumerFactory consumerFactory, IMessageBus messageBus, ILogger<PaymentDeadLetterConsumer> logger) : base(consumerFactory, GroupId)
         {
+            this.messageBus = messageBus;
             this.logger = logger;
         }
 
@@ -32,6 +36,19 @@ namespace PaymentModule.Consumers
                         continue;
 
                     this.logger.LogInformation("MESSAGE RECEIVED: {Message}", result.Message.Value);
+
+                    NotificationSentEvent notificationSentEvent = new NotificationSentEvent
+                    {
+                        OrderId = processPaymentCommand.OrderId,
+                        IsSuccessful = false,
+                        CorrelationId = processPaymentCommand.CorrelationId,
+                        Timestamp = DateTime.UtcNow
+                    };
+
+                    await this.messageBus.PublishAsync(
+                            topic: KafkaConstants.NotificationSentTopic,
+                            message: notificationSentEvent,
+                            cancellationToken: stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {

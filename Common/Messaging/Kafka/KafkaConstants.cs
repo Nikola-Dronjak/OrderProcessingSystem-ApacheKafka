@@ -10,6 +10,7 @@
         public const string PaymentFailedTopic = "payment-failed";
         public const string PaymentDeadLetterTopic = "payment-dead-letter";
         public const string OrderCompletedTopic = "order-completed";
+        public const string NotificationSentTopic = "notification-sent";
         #endregion
 
         #region Header names

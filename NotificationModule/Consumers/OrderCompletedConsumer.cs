@@ -1,4 +1,5 @@
 ﻿using Common.Events;
+using Common.Messaging;
 using Common.Messaging.Kafka;
 using Confluent.Kafka;
 using System.Text.Json;
@@ -10,10 +11,12 @@ namespace NotificationModule.Consumers
         private const string GroupId = "notification-group";
         private const int SimulatedNotificationProcessingDelayMilliseconds = 500;
 
+        private readonly IMessageBus messageBus;
         private readonly ILogger<OrderCompletedConsumer> logger;
 
-        public OrderCompletedConsumer(IKafkaConsumerFactory consumerFactory, ILogger<OrderCompletedConsumer> logger) : base(consumerFactory, GroupId)
+        public OrderCompletedConsumer(IKafkaConsumerFactory consumerFactory, IMessageBus messageBus, ILogger<OrderCompletedConsumer> logger) : base(consumerFactory, GroupId)
         {
+            this.messageBus = messageBus;
             this.logger = logger;
         }
 
@@ -36,6 +39,19 @@ namespace NotificationModule.Consumers
 
                     // Simulate notification sending logic
                     await Task.Delay(SimulatedNotificationProcessingDelayMilliseconds, stoppingToken);
+
+                    NotificationSentEvent notificationSentEvent = new NotificationSentEvent
+                    {
+                        OrderId = orderCompletedEvent.OrderId,
+                        IsSuccessful = true,
+                        CorrelationId = orderCompletedEvent.CorrelationId,
+                        Timestamp = DateTime.UtcNow
+                    };
+
+                    await this.messageBus.PublishAsync(
+                            topic: KafkaConstants.NotificationSentTopic,
+                            message: notificationSentEvent,
+                            cancellationToken: stoppingToken);
 
                     this.logger.LogInformation(
                         """

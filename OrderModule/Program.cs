@@ -13,9 +13,11 @@ builder.Services.AddHostedService<InventoryReservedConsumer>();
 builder.Services.AddHostedService<PaymentSuceededConsumer>();
 
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();

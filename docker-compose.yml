@@ -92,6 +92,14 @@ services:
           --partitions 1 \
           --replication-factor 1
 
+        /opt/kafka/bin/kafka-topics.sh \
+          --create \
+          --if-not-exists \
+          --topic notification-sent \
+          --bootstrap-server kafka:9092 \
+          --partitions 1 \
+          --replication-factor 1
+
         echo "Kafka topics initialized successfully."
 
   order-service:
@@ -103,6 +111,12 @@ services:
     depends_on:
       kafka-init:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     environment:
       Kafka__BootstrapServers: kafka:9092
       ASPNETCORE_HTTP_PORTS: 8080
@@ -134,6 +148,18 @@ services:
     depends_on:
       kafka-init:
         condition: service_completed_successfully
+    environment:
+      Kafka__BootstrapServers: kafka:9092
+
+  benchmark-service:
+    build:
+      context: .
+      dockerfile: BenchmarkModule/Dockerfile
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+      order-service:
+        condition: service_healthy
     environment:
       Kafka__BootstrapServers: kafka:9092
 
