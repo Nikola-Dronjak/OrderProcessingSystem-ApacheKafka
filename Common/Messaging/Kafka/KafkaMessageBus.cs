@@ -15,13 +15,14 @@ namespace Common.Messaging.Kafka
             this.logger = logger;
         }
 
-        public async Task PublishAsync<T>(string topic, T message, CancellationToken cancellationToken)
+        public async Task PublishAsync<T>(string topic, T message, Headers? headers, CancellationToken cancellationToken)
         {
             string payload = JsonSerializer.Serialize(message);
             Message<string, string> kafkaMessage = new Message<string, string>
             {
                 Key = Guid.NewGuid().ToString(),
-                Value = payload
+                Value = payload,
+                Headers = headers
             };
 
             await this.producer.ProduceAsync(

@@ -71,6 +71,22 @@ services:
         /opt/kafka/bin/kafka-topics.sh \
           --create \
           --if-not-exists \
+          --topic payment-failed \
+          --bootstrap-server kafka:9092 \
+          --partitions 1 \
+          --replication-factor 1
+
+        /opt/kafka/bin/kafka-topics.sh \
+          --create \
+          --if-not-exists \
+          --topic payment-dead-letter \
+          --bootstrap-server kafka:9092 \
+          --partitions 1 \
+          --replication-factor 1
+
+        /opt/kafka/bin/kafka-topics.sh \
+          --create \
+          --if-not-exists \
           --topic order-completed \
           --bootstrap-server kafka:9092 \
           --partitions 1 \

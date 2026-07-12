@@ -1,7 +1,9 @@
-﻿namespace Common.Messaging
+﻿using Confluent.Kafka;
+
+namespace Common.Messaging
 {
     public interface IMessageBus
     {
-        Task PublishAsync<T>(string topic, T message, CancellationToken cancellationToken);
+        Task PublishAsync<T>(string topic, T message, Headers? headers = null, CancellationToken cancellationToken = default);
     }
 }

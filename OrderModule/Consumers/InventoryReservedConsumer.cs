@@ -9,7 +9,7 @@ namespace OrderModule.Consumers
 {
     public class InventoryReservedConsumer : KafkaConsumerBackgroundService
     {
-        private const string GroupId = "order-group";
+        private const string GroupId = "inventory-reserved-group";
         private const int SimulatedOrchestrationProcessingDelayMilliseconds = 1000;
 
         private readonly IMessageBus messageBus;

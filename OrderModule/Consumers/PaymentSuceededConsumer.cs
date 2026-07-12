@@ -8,7 +8,7 @@ namespace OrderModule.Consumers
 {
     public class PaymentSuceededConsumer : KafkaConsumerBackgroundService
     {
-        private const string GroupId = "order-group";
+        private const string GroupId = "payment-succeeded-group";
 
         private readonly IMessageBus messageBus;
         private readonly ILogger<PaymentSuceededConsumer> logger;
