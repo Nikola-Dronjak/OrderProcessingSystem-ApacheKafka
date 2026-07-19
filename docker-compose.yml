@@ -106,8 +106,6 @@ services:
     build:
       context: .
       dockerfile: OrderModule/Dockerfile
-    ports:
-      - "5025:8080"
     depends_on:
       kafka-init:
         condition: service_completed_successfully
